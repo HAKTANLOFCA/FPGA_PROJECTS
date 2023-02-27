@@ -106,7 +106,7 @@ pwm_out => pwm_g_out
 
 );
 
-pwmyellow_inst:pwm
+pwmblue_inst:pwm
 port map(
 clk => clk,
 rst  => rst,
