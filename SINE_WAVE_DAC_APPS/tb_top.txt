@@ -1,0 +1,84 @@
+
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+
+
+entity TB_TOP is
+ GENERIC(
+    clk_freq    : INTEGER := 50;  --system clock frequency in MHz
+    spi_clk_div : INTEGER := 1);  --spi_clk_div = clk_freq/100 (answer rounded up)
+end TB_TOP;
+
+
+
+
+architecture Behavioral of TB_TOP is
+
+
+
+component top IS
+  GENERIC(
+    clk_freq    : INTEGER := 50;  --system clock frequency in MHz
+    spi_clk_div : INTEGER := 1);  --spi_clk_div = clk_freq/100 (answer rounded up)
+  PORT(
+    clk             : IN      STD_LOGIC;                      --system clock
+    reset_n         : IN      STD_LOGIC;                      --active low asynchronous reset
+    mosi_o          : OUT    STD_LOGIC; 
+    sclk            : BUFFER  STD_LOGIC;                      --SPI bus to DAC: serial clock (SCLK)
+    ss_n            : BUFFER  STD_LOGIC_VECTOR(0 DOWNTO 0));  --SPI bus to DAC: slave select (~SYNC)
+END component;
+
+signal clk_i 		: std_logic := '0';
+signal  reset_n : STD_LOGIC := '0';
+--signal sine_tb : STD_LOGIC_VECTOR(15 downto 0);
+--SIGNAL enable  :      STD_LOGIC;
+--   SIGNAL spi_tx_data   : STD_LOGIC_VECTOR(23 DOWNTO 0);       --transmit data for SPI component
+signal cs_o 		: STD_LOGIC_VECTOR(0 DOWNTO 0);
+signal sclk_o 		: std_logic;
+signal mosi_o 		: std_logic;
+-- signal busy    :     STD_LOGIC;
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+begin
+
+uut: top 
+generic map(
+clk_freq 		=> clk_freq 	,
+spi_clk_div		=> spi_clk_div	
+	
+)
+PORT MAP (
+clk  		=> clk_i,
+reset_n  		=> reset_n,
+mosi_o  		=> mosi_o,
+sclk  		=> sclk_o,
+ss_n  		=> cs_o
+);
+
+
+
+
+reset_n <= '0' , '1' after 100 ns;
+process
+begin
+
+clk_i <= '0';
+wait for 5 ns;
+clk_i <= '1';
+wait for 5 ns;
+end process;
+end Behavioral;
